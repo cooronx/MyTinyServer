@@ -1,0 +1,9 @@
+/.vscode
+/build
+
+.clang-format
+client.c
+server.c
+util.c
+util.h
+test.cpp
