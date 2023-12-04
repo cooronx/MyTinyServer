@@ -6,6 +6,7 @@
 #include <memory>
 #include <set>
 
+#include "Channel.h"
 #include "Epoll.h"
 #include "InetAddress.h"
 #include "Socket.h"
@@ -56,26 +57,27 @@ int main() {
 
   // 不能让它被析构掉，不然在epoll里面的fd就无效了
   Socket* tempsc = nullptr;
-  socket->setnoblock();
-  epoll.add_to_epoll(socket->fd(), EPOLLIN | EPOLLET);
+  auto server_channel = new Channel(socket->fd(), &epoll);
+  server_channel->EnableRead(true);
 
   while (true) {
     //阻塞式轮询
-    auto act_events = epoll.poll(-1);
+    auto act_events = epoll.Poll(-1);
 
-    for (auto& act_event : act_events) {
-      if (act_event.data.fd == socket->fd()) {
+    for (auto act_event : act_events) {
+      if (act_event->fd() == socket->fd()) {
         InetAddress new_addr;
         int new_fd = socket->accept(&new_addr);
         // 离开作用域会被析构掉！！！
         tempsc = new Socket(new_fd);
-        tempsc->setnoblock();
-        epoll.add_to_epoll(tempsc->fd(), EPOLLIN | EPOLLET);
+        HelperFunc::setnoblock(tempsc->fd());
+        auto client_channel = new Channel(new_fd, &epoll);
+        client_channel->EnableRead(false);
         std::cout << "new connection fd = " << tempsc->fd()
                   << " address = " << new_addr.readable_ipv4_address()
                   << std::endl;
-      } else if (act_event.events & EPOLLIN) {
-        handleReadEvent(act_event.data.fd);
+      } else if (act_event->read_events() & EPOLLIN) {
+        handleReadEvent(act_event->fd());
       } else {
       }
     }

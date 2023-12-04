@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <vector>
 
+#include "Channel.h"
 #include "Noncopyable.h"
 
 using std::vector;
@@ -22,15 +23,19 @@ class Epoll : Noncopyable {
   Epoll();
   ~Epoll();
 
-  // * 添加fd到epoll中
-  void add_to_epoll(int, uint32_t);
+  //* 添加fd到epoll中
+  void AddFdToEpoll(int, uint32_t);
 
-  // * 轮询epoll
-  vector<epoll_event> poll(int);
+  //* 轮询epoll
+  vector<Channel *> Poll(int);
+
+  //* 添加channel到epoll中
+  //! channel和fd的区别在于，channel是一个被包装过的fd，承载有更多的信息，推荐使用
+  void UpdateChannel(Channel *);
 
  private:
   int epollfd_;
-// 由内核给我们提供给我们的事件表
+  // 由内核给我们提供给我们的事件表
   epoll_event *events_;
 };
 

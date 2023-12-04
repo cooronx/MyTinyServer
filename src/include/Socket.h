@@ -31,8 +31,8 @@ class Socket : Noncopyable {
   // 开始监听
   void listen(int);
 
-  // 设置为非阻塞socket
-  void setnoblock();
+  // // 设置为非阻塞socket
+  // void setnoblock();
 
   // *返回成功建立连接的fd
   // *需要传入一个空地址，会把建立连接的客户端地址写入这个空地址
