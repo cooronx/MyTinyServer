@@ -1,20 +1,20 @@
 #include "Channel.h"
 
-#include "Epoll.h"
+#include "EventLoop.h"
 #include "util.h"
 
 using namespace MyTinyServer;
 
-Channel::Channel(int fd, Epoll* epoll) : fd_(fd) {
-  epoll_ = epoll;
+Channel::Channel(int fd, EventLoop* epoll) : fd_(fd) {
+  loop_ = epoll;
   in_epoll_ = false;
 }
 
-void Channel::EnableRead(bool blocking) {
+void Channel::EnableRead(IOType type) {
   events_ = EPOLLIN;
-  if (!blocking) {
+  if (type == IOType::NOBLOCK) {
     HelperFunc::setnoblock(fd_);
     events_ |= EPOLLET;
   }
-  epoll_->UpdateChannel(this);
+  loop_->UpdateChannel(this);
 }

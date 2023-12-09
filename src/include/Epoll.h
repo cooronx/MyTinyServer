@@ -27,7 +27,7 @@ class Epoll : Noncopyable {
   void AddFdToEpoll(int, uint32_t);
 
   //* 轮询epoll
-  vector<Channel *> Poll(int);
+  [[nodiscard]] vector<Channel *> Poll(int);
 
   //* 添加channel到epoll中
   //! channel和fd的区别在于，channel是一个被包装过的fd，承载有更多的信息，推荐使用
