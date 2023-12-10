@@ -9,16 +9,11 @@ using namespace MyTinyServer;
 using std::function;
 
 Server::Server(EventLoop *loop) : eventloop_(loop) {
-  //* server_socket 阻塞进行连接 使用LT方式触发
-  server_socket_ = new Socket(DomainType::IPV4, ConnectionType::TCP_CONNECTION);
-  server_addr = new InetAddress("127.0.0.1", 8888, DomainType::IPV4);
-  server_socket_->bind(*server_addr);
-  server_socket_->listen(SOMAXCONN);
-
-  server_channel = new Channel(server_socket_->fd(), eventloop_);
-  function<void()> callback = [this] { NewConnection(); };
-  server_channel->set_callback(callback);
-  server_channel->EnableRead(IOType::BLOCK);
+  acceptor_ = new Acceptor(loop);
+  function<void(Socket *)> cb = [this](auto &&PH1) {
+    NewConnection(std::forward<decltype(PH1)>(PH1));
+  };
+  acceptor_->set_connection_callback(cb);
 }
 
 void Server::HandleReadEvent(int sockfd) {
@@ -48,9 +43,9 @@ void Server::HandleReadEvent(int sockfd) {
   }
 }
 
-void Server::NewConnection() {
+void Server::NewConnection(Socket *server_socket) {
   InetAddress client_addr;
-  int new_fd = server_socket_->accept(&client_addr);
+  int new_fd = server_socket->accept(&client_addr);
   auto new_client_socket = new Socket(new_fd);
   //* 新建立的连接设置为非阻塞 ET触发
   HelperFunc::setnoblock(new_client_socket->fd());

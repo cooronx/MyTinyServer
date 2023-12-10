@@ -14,6 +14,7 @@ class EventLoop;
 
 using std::function;
 
+//* 其实这个类就是fd的包装类，包含了fd的各种事件
 class Channel {
  public:
   Channel() = delete;
