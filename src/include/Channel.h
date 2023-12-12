@@ -39,6 +39,7 @@ class Channel {
   void HandleEvent() { callback_(); }
 
  private:
+  // fd由socket来释放
   int fd_;
   //! 这个指针不应该被当前类释放
   EventLoop *loop_;

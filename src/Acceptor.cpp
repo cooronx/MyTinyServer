@@ -17,3 +17,15 @@ Acceptor::Acceptor(EventLoop *loop) : loop_(loop) {
   server_channel->set_callback(cb);
   server_channel->EnableRead(IOType::BLOCK);
 }
+
+void Acceptor::AcceptConnection() {
+  InetAddress client_addr;
+  int new_fd = server_socket->accept(&client_addr);
+  auto new_client_socket = new Socket(new_fd);
+  //* 新建立的连接设置为非阻塞 ET触发
+  HelperFunc::setnoblock(new_client_socket->fd());
+  ConnectionCallBack_(new_client_socket);
+  std::cout << "new connection fd = " << new_client_socket->fd()
+            << " address = " << client_addr.readable_ipv4_address()
+            << std::endl;
+}

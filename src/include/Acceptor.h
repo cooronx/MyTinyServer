@@ -30,7 +30,7 @@ class Acceptor {
   EventLoop *loop_;
   function<void(Socket *)> ConnectionCallBack_;
 
-  void AcceptConnection() { ConnectionCallBack_(server_socket); }
+  void AcceptConnection();
 };
 
 }  // namespace MyTinyServer

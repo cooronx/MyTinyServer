@@ -1,6 +1,7 @@
 #include "Server.h"
 
 #include "Channel.h"
+#include "Connection.h"
 #include "Epoll.h"
 #include "EventLoop.h"
 #include "InetAddress.h"
