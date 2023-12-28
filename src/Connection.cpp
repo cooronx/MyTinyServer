@@ -1,7 +1,9 @@
 #include "include/Connection.h"
 
+#include <cstdio>
 #include <functional>
 
+#include "Buffer.h"
 #include "util.h"
 
 using namespace MyTinyServer;
@@ -21,9 +23,11 @@ void Connection::Echo(int sockfd) {
     //由于使用非阻塞IO，读取客户端buffer，一次读取buf大小数据，直到全部读取完毕
     bzero(&buf, sizeof(buf));
     ssize_t bytes_read = recv(sockfd, buf, sizeof(buf), 0);
+    auto *buffer = new Buffer(buf);
     if (bytes_read > 0) {
-      printf("message from client fd %d: %s\n", sockfd, buf);
-      send(sockfd, buf, sizeof(buf), 0);
+      printf("message from client fd %d: %s\n", sockfd, buffer->c_str());
+      send(sockfd, buffer->c_str(), buffer->size(), 0);
+
     } else if (bytes_read == -1 && errno == EINTR) {
       //客户端正常中断、继续读取
       printf("continue reading");
@@ -32,7 +36,7 @@ void Connection::Echo(int sockfd) {
                ((errno == EAGAIN) ||
                 (errno ==
                  EWOULDBLOCK))) {  //非阻塞IO，这个条件表示数据全部读取完毕
-      std::cout << "finish reading once" << std::endl;
+      printf("finish reading once\n");
       break;
     } else if (bytes_read == 0) {  // EOF，客户端断开连接
       printf("EOF, client fd %d disconnected\n", sockfd);
@@ -40,5 +44,6 @@ void Connection::Echo(int sockfd) {
       deleteConn_(sockfd);
       break;
     }
+    delete buffer;
   }
 }

@@ -18,3 +18,6 @@ void Channel::EnableRead(IOType type) {
   }
   loop_->UpdateChannel(this);
 }
+
+//* 放入工作线程进行使用
+void Channel::HandleEvent() { loop_->AddToWorkerThread(callback_); }

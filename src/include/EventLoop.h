@@ -1,8 +1,11 @@
 #ifndef EVENTLOOP_H
 #define EVENTLOOP_H
 
+#include <functional>
+
 #include "Epoll.h"
 #include "Noncopyable.h"
+#include "ThreadPool.h"
 namespace MyTinyServer {
 
 class EventLoop : Noncopyable {
@@ -14,6 +17,10 @@ class EventLoop : Noncopyable {
   void Loop();
 
   void UpdateChannel(Channel *);
+
+  void AddToWorkerThread(std::function<void()> ck) {
+    ThreadPool::GetInstance().addTask(std::move(ck));
+  }
 
  private:
   Epoll *epoll_{};

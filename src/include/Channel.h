@@ -35,8 +35,7 @@ class Channel {
   //* 会自动把阻塞的fd转换为非阻塞的
   void EnableRead(IOType);
 
-  //* 使用回调函数
-  void HandleEvent() { callback_(); }
+  void HandleEvent();
 
  private:
   // fd由socket来释放
