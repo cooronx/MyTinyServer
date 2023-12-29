@@ -4,6 +4,7 @@
 #include <sys/socket.h>
 
 #include <map>
+#include <mutex>
 
 #include "Acceptor.h"
 #include "Connection.h"

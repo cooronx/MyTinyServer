@@ -3,14 +3,20 @@
 
 #include <condition_variable>
 #include <functional>
+#include <future>
+#include <iostream>
+#include <memory>
 #include <mutex>
 #include <queue>
+#include <stdexcept>
 #include <thread>
+#include <type_traits>
+#include <utility>
 #include <vector>
 
 namespace MyTinyServer {
 
-//* 单例模式
+//*
 class ThreadPool {
  public:
   ThreadPool(const ThreadPool &) = delete;
@@ -18,19 +24,40 @@ class ThreadPool {
   ThreadPool &operator=(const ThreadPool &) = delete;
   ThreadPool &operator=(ThreadPool &&) = delete;
 
-  //* 用这个方法获取唯一的实例
-  static ThreadPool &GetInstance() {
-    static ThreadPool pool_;
-    return pool_;
-  }
-
-  //----------------------
-  void addTask(std::function<void()> &&);
-
- private:
   ThreadPool();
   ~ThreadPool();
+  // //* 用这个方法获取唯一的实例
+  // static ThreadPool &GetInstance() {
+  //   static ThreadPool pool_;
+  //   return pool_;
+  // }
 
+  //----------------------
+
+  template <class F, class... Args>
+  auto addTask(F &&fun, Args &&... args)
+      -> std::future<typename std::result_of<F(Args...)>::type> {
+    using return_type = typename std::result_of<F(Args...)>::type;
+
+    auto task = std::make_shared<std::packaged_task<return_type()>>(
+        std::bind(std::forward<F>(fun), std::forward<Args>(args)...));
+
+    std::future<return_type> ret = task->get_future();
+    {
+      std::unique_lock<std::mutex> lock(tasks_mutex_);
+
+      if (stop_) {
+        throw std::runtime_error(
+            "ThreadPool already stopped, add task failed!");
+      }
+
+      tasks_.emplace([task] { (*task)(); });
+    }
+    condition_var_.notify_one();
+    return ret;
+  }
+
+ private:
   // ------------------
   std::mutex tasks_mutex_;                   //* 任务队列的互斥量
   std::vector<std::thread> threads_;         //* 工作线程集合

@@ -29,19 +29,6 @@ ThreadPool::ThreadPool() : stop_(false) {
   }
 }
 
-void ThreadPool::addTask(std::function<void()>&& tk) {
-  {
-    std::unique_lock<std::mutex> task_lock(tasks_mutex_);
-
-    if (stop_) {
-      throw std::runtime_error("thread pool stoped, cannot add task");
-    }
-
-    tasks_.emplace(tk);
-  }
-  condition_var_.notify_one();
-}
-
 ThreadPool::~ThreadPool() {
   {
     std::unique_lock<std::mutex> task_lock(tasks_mutex_);

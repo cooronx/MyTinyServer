@@ -1,6 +1,7 @@
 #include "include/Epoll.h"
 
 #include <fcntl.h>
+#include <spdlog/spdlog.h>
 #include <sys/epoll.h>
 #include <unistd.h>
 
@@ -67,7 +68,7 @@ void Epoll::UpdateChannel(Channel *channel) {
   if (!channel->in_epoll()) {
     int ret = epoll_ctl(epollfd_, EPOLL_CTL_ADD, channel->fd(), &event);
     channel->set_in_epoll();
-    Error::error_check(ret == -1, "Epoll: add channel failed!\n");
+    Error::error_check(ret == -1, "Epoll: add channel failed!\n");  
   } else {
     int ret = epoll_ctl(epollfd_, EPOLL_CTL_MOD, channel->fd(), &event);
     Error::error_check(ret == -1, "Epoll: mod channel failed!\n");

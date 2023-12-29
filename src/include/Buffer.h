@@ -20,6 +20,7 @@ class Buffer {
   //* 包装函数
   [[nodiscard]] const char *c_str() const { return content_.c_str(); }
   [[nodiscard]] size_t size() const { return content_.size(); }
+  void clear() { content_.clear(); }
 
  private:
   string content_;

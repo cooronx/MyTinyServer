@@ -7,3 +7,4 @@ server.c
 util.c
 util.h
 test.cpp
+logs

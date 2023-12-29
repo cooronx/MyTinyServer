@@ -1,7 +1,12 @@
 #include "include/Connection.h"
 
+#include <spdlog/common.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/spdlog.h>
+
 #include <cstdio>
 #include <functional>
+#include <iostream>
 
 #include "Buffer.h"
 #include "util.h"
@@ -13,6 +18,7 @@ Connection::Connection(int fd, EventLoop *loop) {
   socket_ = new Socket(fd);
   channel_ = new Channel(fd, loop);
   function<void()> ck = [this, fd] { Echo(fd); };
+
   channel_->set_callback(ck);
   channel_->EnableRead(IOType::NOBLOCK);
 }

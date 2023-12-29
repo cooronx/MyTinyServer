@@ -1,5 +1,9 @@
 #include "include/Socket.h"
 
+#include <spdlog/spdlog.h>
+
+#include "util.h"
+
 using namespace MyTinyServer;
 // domain - IPV4 or IPV6
 // type   - STREAM : tcp ,DGRAM : udp
@@ -10,14 +14,12 @@ Socket::Socket(DomainType domain, ConnectionType conn)
   int cn = (conn == ConnectionType::TCP_CONNECTION ? SOCK_STREAM : SOCK_DGRAM);
 
   socket_ = ::socket(dm, cn, 0);
-
   Error::error_check(socket_ == -1, "socket: create socket failed!\n");
 }
 
 Socket::Socket(int fd) : socket_(fd) {
   Error::error_check(socket_ == -1, "socket: copy socket failed!\n");
 }
-
 void Socket::bind(const InetAddress &addr) {
   Error::error_check(::bind(socket_, (sockaddr *)&addr.addr_, addr.len_) == -1,
                      "socket :bind failed!\n");
@@ -34,6 +36,12 @@ int Socket::accept(InetAddress *addr) {
   Error::error_check(client_sockfd == -1, "socket: accept failed!\n");
 
   return client_sockfd;
+}
+
+void Socket::connect(InetAddress *addr) {
+  struct sockaddr_in ar = addr->addr_;
+  Error::error_check(::connect(socket_, (sockaddr *)&ar, sizeof(ar)) == -1,
+                     "socket connect error");
 }
 
 Socket::~Socket() {

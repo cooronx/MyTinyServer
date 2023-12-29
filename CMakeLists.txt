@@ -23,6 +23,9 @@ include_directories(${Server_SRC_INCLUDE_DIR} ${Server_TEST_INCLUDE_DIR})
 
 add_definitions("-Wall -g")
 
+find_package(spdlog REQUIRED)
+
+
 add_subdirectory(src)
 add_subdirectory(test)
 

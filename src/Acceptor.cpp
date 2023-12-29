@@ -1,5 +1,9 @@
 #include "include/Acceptor.h"
 
+#include <spdlog/common.h>
+#include <spdlog/logger.h>
+#include <spdlog/spdlog.h>
+
 #include <functional>
 
 #include "util.h"
@@ -25,7 +29,7 @@ void Acceptor::AcceptConnection() {
   //* 新建立的连接设置为非阻塞 ET触发
   HelperFunc::setnoblock(new_client_socket->fd());
   ConnectionCallBack_(new_client_socket);
-  std::cout << "new connection fd = " << new_client_socket->fd()
-            << " address = " << client_addr.readable_ipv4_address()
-            << std::endl;
+  auto logger_ = spdlog::get("mainlogger");
+  logger_->info("新连接建立 分配的文件描述符fd = {}, 客户端地址: {}",
+                new_client_socket->fd(), client_addr.readable_ipv4_address());
 }

@@ -34,6 +34,9 @@ class Socket : Noncopyable {
   // // 设置为非阻塞socket
   // void setnoblock();
 
+  //* 仅用于客户端socket
+  void connect(InetAddress *);
+
   // *返回成功建立连接的fd
   // *需要传入一个空地址，会把建立连接的客户端地址写入这个空地址
   // !这里需要对传入的addr进行修改，所以不是const
