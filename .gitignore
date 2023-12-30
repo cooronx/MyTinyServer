@@ -8,3 +8,5 @@ util.c
 util.h
 test.cpp
 logs
+.idea
+cmake-build-debug/

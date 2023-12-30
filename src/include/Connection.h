@@ -18,8 +18,8 @@ class Connection : Noncopyable {
   }
 
   ~Connection() {
-    delete socket_;
     delete channel_;
+    delete socket_;
   }
 
  private:

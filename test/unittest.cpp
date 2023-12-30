@@ -16,7 +16,7 @@ using namespace MyTinyServer;
 
 void oneClient(int msgs, int wait) {
   auto *sock = new Socket(DomainType::IPV4, ConnectionType::TCP_CONNECTION);
-  auto *addr = new InetAddress("127.0.0.1", 8888, DomainType::IPV4);
+  auto *addr = new InetAddress("127.0.0.1", 1234, DomainType::IPV4);
   sock->connect(addr);
 
   int sockfd = sock->fd();

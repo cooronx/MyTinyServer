@@ -12,7 +12,7 @@ int main() {
   std::unique_ptr<Socket> socket(
       new Socket(DomainType::IPV4, ConnectionType::TCP_CONNECTION));
 
-  InetAddress server_addr("127.0.0.1", 8888, DomainType::IPV4);
+  InetAddress server_addr("127.0.0.1", 1234, DomainType::IPV4);
 
   int ret = connect(socket->fd(), (struct sockaddr *)&server_addr.addr_,
                     sizeof(server_addr.addr_));

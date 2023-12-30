@@ -19,6 +19,7 @@ class Channel {
  public:
   Channel() = delete;
   Channel(int, EventLoop *);
+  ~Channel() {}
 
   //* getter
   [[nodiscard]] int fd() const { return this->fd_; }
@@ -30,7 +31,7 @@ class Channel {
   void set_in_epoll() { in_epoll_ = true; }
   void set_read_events(uint32_t ev) { read_events_ = ev; }
   void set_callback(function<void()> ck) { callback_ = std::move(ck); }
-
+  void use_thread_pool(bool state) { isUseThread = false; }
   //* 开启读
   //* 会自动把阻塞的fd转换为非阻塞的
   void EnableRead(IOType);
@@ -38,7 +39,8 @@ class Channel {
   void HandleEvent();
 
  private:
-  // fd由socket来释放
+  bool isUseThread = true;
+  // *fd由socket来释放
   int fd_;
   //! 这个指针不应该被当前类释放
   EventLoop *loop_;

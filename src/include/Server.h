@@ -22,6 +22,7 @@ class Server {
   std::map<int, Connection *> connections_;
   EventLoop *eventloop_;
   Acceptor *acceptor_;
+  std::mutex mtx_;
 
   // 回调函数
   void NewConnection(Socket *);

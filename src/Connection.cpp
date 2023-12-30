@@ -46,8 +46,10 @@ void Connection::Echo(int sockfd) {
       break;
     } else if (bytes_read == 0) {  // EOF，客户端断开连接
       printf("EOF, client fd %d disconnected\n", sockfd);
-      //回调删除fd
+      // 回调删除fd
       deleteConn_(sockfd);
+      auto logger = spdlog::get("mainlogger");
+      logger->info("fd = {} 断开连接", sockfd);
       break;
     }
     delete buffer;

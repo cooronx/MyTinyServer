@@ -4,6 +4,7 @@
 #include <spdlog/sinks/basic_file_sink.h>
 
 #include <functional>
+#include <mutex>
 
 #include "Socket.h"
 #include "spdlog/spdlog.h"
@@ -39,7 +40,10 @@ void Server::NewConnection(Socket *client_socket) {
 }
 
 void Server::DeleteConnection(int fd) {
-  auto conn = connections_[fd];
-  connections_.erase(fd);
-  delete conn;
+  {
+    std::unique_lock<std::mutex> lock(mtx_);
+    auto conn = connections_[fd];
+    connections_.erase(fd);
+    delete conn;
+  }
 }
