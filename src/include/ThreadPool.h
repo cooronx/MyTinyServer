@@ -24,15 +24,10 @@ class ThreadPool {
   ThreadPool &operator=(const ThreadPool &) = delete;
   ThreadPool &operator=(ThreadPool &&) = delete;
 
-  ThreadPool();
+  ThreadPool(unsigned int);
   ~ThreadPool();
-  // //* 用这个方法获取唯一的实例
-  // static ThreadPool &GetInstance() {
-  //   static ThreadPool pool_;
-  //   return pool_;
-  // }
 
-  //----------------------
+  [[nodiscard]] auto size() const { return size_; }
 
   template <class F, class... Args>
   auto addTask(F &&fun, Args &&... args)
@@ -64,6 +59,7 @@ class ThreadPool {
   std::queue<std::function<void()>> tasks_;  //* 任务队列
   std::condition_variable condition_var_;
   bool stop_;  // *线程池是否停止工作(虽然感觉没啥用)
+  unsigned int size_;
 };
 
 }  // namespace MyTinyServer

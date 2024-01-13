@@ -1,5 +1,6 @@
 #include "include/ThreadPool.h"
 
+#include <algorithm>
 #include <functional>
 #include <mutex>
 #include <stdexcept>
@@ -9,8 +10,8 @@
 
 using namespace MyTinyServer;
 
-ThreadPool::ThreadPool() : stop_(false) {
-  for (int i = 1; i <= MAX_THREAD_COUNTS; ++i) {
+ThreadPool::ThreadPool(unsigned int sz) : stop_(false), size_(sz) {
+  for (int i = 1; i <= std::min(sz, MAX_THREAD_COUNTS); ++i) {
     threads_.emplace_back(std::thread([this] {
       while (true) {
         std::function<void()> task;

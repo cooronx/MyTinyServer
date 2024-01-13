@@ -82,13 +82,10 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  ThreadPool pool;
+  ThreadPool pool(1024);
   std::function<void()> func = [msgs, wait] { return oneClient(msgs, wait); };
   for (int i = 0; i < threads; ++i) {
     pool.addTask(func);
   }
-
-  // std::cout << "this is where" << std::endl;
-  // std::cout << std::thread::hardware_concurrency();
   return 0;
 }

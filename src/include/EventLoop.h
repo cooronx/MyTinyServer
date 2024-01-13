@@ -11,10 +11,7 @@ namespace MyTinyServer {
 
 class EventLoop : Noncopyable {
  public:
-  EventLoop() {
-    epoll_ = new Epoll();
-    thread_pool_ = new ThreadPool();
-  }
+  EventLoop() { epoll_ = new Epoll(); }
   ~EventLoop() { delete epoll_; }
 
   //* 事件循环
@@ -22,17 +19,7 @@ class EventLoop : Noncopyable {
 
   void UpdateChannel(Channel *);
 
-  void AddToWorkerThread(std::function<void()> ck) {
-    try {
-      // std::cout << "this is in loop" << std::endl;
-      thread_pool_->addTask(std::move(ck));
-    } catch (std::exception &e) {
-      std::cout << e.what() << std::endl;
-    }
-  }
-
  private:
-  ThreadPool *thread_pool_{};
   Epoll *epoll_{};
   bool is_quit_{};
 };

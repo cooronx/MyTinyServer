@@ -20,10 +20,4 @@ void Channel::EnableRead(IOType type) {
 }
 
 //* 放入工作线程进行使用
-void Channel::HandleEvent() {
-  if (isUseThread) {
-    loop_->AddToWorkerThread(callback_);
-  } else {
-    callback_();
-  }
-}
+void Channel::HandleEvent() { callback_(); }

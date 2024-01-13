@@ -32,7 +32,8 @@ class Channel {
   void set_read_events(uint32_t ev) { read_events_ = ev; }
   void set_callback(function<void()> ck) { callback_ = std::move(ck); }
   void use_thread_pool(bool state) { isUseThread = false; }
-  //* 开启读
+
+  //* 开启对这个Channel的监听，读写，这里会把channel加入到epoll中
   //* 会自动把阻塞的fd转换为非阻塞的
   void EnableRead(IOType);
 
