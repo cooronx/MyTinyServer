@@ -6,8 +6,8 @@
 #include <string>
 #include <string_view>
 
+#include "Util.h"
 #include "arpa/inet.h"
-#include "util.h"
 
 using std::array;
 using std::string;

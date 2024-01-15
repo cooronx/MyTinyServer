@@ -9,8 +9,8 @@
 #include "Channel.h"
 #include "Socket.h"
 #include "ThreadPool.h"
+#include "Util.h"
 #include "spdlog/spdlog.h"
-#include "util.h"
 
 using namespace MyTinyServer;
 using std::function;
@@ -57,8 +57,11 @@ void Server::NewConnection(Socket *client_socket) {
 }
 
 void Server::DeleteConnection(int fd) {
-  auto conn = connections_[fd];
-  connections_.erase(fd);
-  delete conn;
+  auto it = connections_.find(fd);
+  if (it != connections_.end()) {
+    auto conn = connections_[fd];
+    connections_.erase(fd);
+    delete conn;
+  }
 }
 int Server::RandomSubIndex(int fd) { return fd % sub_reactors_.size(); }

@@ -2,7 +2,7 @@
 
 #include <spdlog/spdlog.h>
 
-#include "util.h"
+#include "Util.h"
 
 using namespace MyTinyServer;
 // domain - IPV4 or IPV6

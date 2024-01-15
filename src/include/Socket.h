@@ -6,10 +6,10 @@
 
 #include "InetAddress.h"
 #include "Noncopyable.h"
+#include "Util.h"
 #include "arpa/inet.h"
 #include "sys/socket.h"
 #include "unistd.h"
-#include "util.h"
 
 using std::string;
 

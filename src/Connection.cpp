@@ -9,7 +9,7 @@
 #include <iostream>
 
 #include "Buffer.h"
-#include "util.h"
+#include "Util.h"
 
 using namespace MyTinyServer;
 using std::function;

@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <thread>
 
-#include "util.h"
+#include "Util.h"
 
 using namespace MyTinyServer;
 

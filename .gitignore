@@ -2,11 +2,6 @@
 /build
 
 .clang-format
-client.c
-server.c
-util.c
-util.h
-test.cpp
 logs
 .idea
 cmake-build-debug/
